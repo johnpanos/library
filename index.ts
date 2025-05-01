@@ -1,78 +1,20 @@
-type CreateBookRequest = {
-  title?: string;
-  author?: string;
-  isbn?: string;
-  copies?: number;
-};
-
-type CreateBookResponse = {
-  title: string;
-  author: string;
-  isbn: string;
-  copies: number;
-  available_copies: number;
-};
-
-type GetBookDetailsResponse = {
-  title: string;
-  author: string;
-  isbn: string;
-  copies: number;
-  available_copies: number;
-};
-
-type CreateCustomerRequest = {
-  name?: string;
-  email?: string;
-  customer_id?: string;
-};
-
-type CreateCustomerResponse = {
-  name: string;
-  email: string;
-  customer_id: string;
-};
-
-type GetCustomerDetailsResponse = {
-  name: string;
-  email: string;
-  customer_id: string;
-};
-
-type CreateCheckoutRequest = {
-  isbn?: string;
-  customer_id?: string;
-  due_date?: string;
-};
-
-type CreateCheckoutResponse = {
-  checkout_id: string;
-  isbn: string;
-  title: string;
-  customer_id: string;
-  checkout_date: string;
-  due_date: string;
-};
-
-type CreateReturnRequest = {
-  isbn?: string;
-  customer_id?: string;
-};
-
-type CreateReturnResponse = {
-  message: string;
-  isbn: string;
-  customer_id: string;
-  return_date: string;
-};
-
-type GetCustomerCheckedOutBooks = {
-  isbn: string;
-  title: string;
-  author: string;
-  checkout_date: string;
-  due_date: string;
-};
+import type {
+  CreateBookRequest,
+  CreateBookResponse,
+  GetBookDetailsResponse,
+} from "./src/dtos/BookDTOs.ts";
+import type {
+  CreateCustomerRequest,
+  CreateCustomerResponse,
+  GetCustomerDetailsResponse,
+} from "./src/dtos/CustomerDTOs.ts";
+import type {
+  CreateCheckoutRequest,
+  CreateCheckoutResponse,
+  CreateReturnRequest,
+  CreateReturnResponse,
+  GetCustomerCheckedOutBooks,
+} from "./src/dtos/CheckoutDTOs.ts";
 
 const server = Bun.serve({
   port: 3000,
