@@ -16,6 +16,10 @@ import type {
   GetCustomerCheckedOutBooks,
 } from "./src/dtos/CheckoutDTOs.ts";
 
+import { BookService } from "./src/domain/services/BookService.ts";
+
+const bookService = new BookService();
+
 const server = Bun.serve({
   port: 3000,
   routes: {
@@ -24,7 +28,24 @@ const server = Bun.serve({
       POST: async (req) => {
         const body = (await req.json()) as CreateBookRequest;
 
-        const res: CreateBookResponse = {};
+        const result = bookService.createBook(body);
+
+        if (!result.ok) {
+          return Response.json(
+            { message: result.error.message },
+            { status: 400 },
+          );
+        }
+
+        const { title, author, isbn, copies } = result.value;
+        const res: CreateBookResponse = {
+          title,
+          author,
+          isbn,
+          copies,
+          available_copies: copies,
+        };
+
         return Response.json(res);
       },
     },
