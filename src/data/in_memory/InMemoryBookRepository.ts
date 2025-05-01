@@ -2,15 +2,21 @@ import type { BookRepository } from "@/data/BookRepository.ts";
 import type { Book } from "@/domain/models/Book";
 
 export class InMemoryBookRepository implements BookRepository {
+  private bookMap: Record<Book["isbn"], Book> = {};
+
   public insert(book: Book): Book {
-    throw new Error("Method not implemented.");
+    const bookCopy = { ...book };
+
+    this.bookMap[book.isbn] = bookCopy;
+
+    return bookCopy;
   }
 
   public findByIsbn(isbn: string): Book | undefined {
-    throw new Error("Method not implemented.");
+    return this.bookMap[isbn];
   }
 
   public reset(): void {
-    throw new Error("Method not implemented.");
+    this.bookMap = {};
   }
 }
