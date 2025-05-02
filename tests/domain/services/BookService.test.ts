@@ -4,8 +4,9 @@ import { createTestApplicationContext } from "../../TestEnvironment.ts";
 import { ZodError } from "zod";
 
 test("Create Book invalid", async () => {
-  const { bookRepository: repository } = createTestApplicationContext();
-  const service = new BookService(repository);
+  const { bookRepository: repository, checkoutRepository } =
+    createTestApplicationContext();
+  const service = new BookService(repository, checkoutRepository);
 
   const result = service.createBook({});
 
@@ -24,8 +25,9 @@ test("Create Book invalid", async () => {
 });
 
 test("Create Book valid (13 digit ISBN format)", async () => {
-  const { bookRepository: repository } = createTestApplicationContext();
-  const service = new BookService(repository);
+  const { bookRepository: repository, checkoutRepository } =
+    createTestApplicationContext();
+  const service = new BookService(repository, checkoutRepository);
 
   const expected = {
     title: "Discrete Math",
@@ -39,8 +41,9 @@ test("Create Book valid (13 digit ISBN format)", async () => {
 });
 
 test("Create Book valid (10 digit ISBN format)", async () => {
-  const { bookRepository: repository } = createTestApplicationContext();
-  const service = new BookService(repository);
+  const { bookRepository: repository, checkoutRepository } =
+    createTestApplicationContext();
+  const service = new BookService(repository, checkoutRepository);
 
   const expected = {
     title: "Discrete Math",
@@ -54,8 +57,9 @@ test("Create Book valid (10 digit ISBN format)", async () => {
 });
 
 test("Create Book invalid ISBN length", async () => {
-  const { bookRepository: repository } = createTestApplicationContext();
-  const service = new BookService(repository);
+  const { bookRepository: repository, checkoutRepository } =
+    createTestApplicationContext();
+  const service = new BookService(repository, checkoutRepository);
 
   const expected = {
     title: "Discrete Math",
