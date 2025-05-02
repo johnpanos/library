@@ -16,11 +16,17 @@ import type {
   GetCustomerCheckedOutBooks,
 } from "@/dtos/CheckoutDTOs.ts";
 
-import { BookService } from "@/domain/services/BookService.ts";
 import { InMemoryBookRepository } from "@/data/in_memory/InMemoryBookRepository.ts";
+import { BookService } from "@/domain/services/BookService.ts";
+
+import { InMemoryCustomerRepository } from "@/data/in_memory/InMemoryCustomerRepository.ts";
+import { CustomerService } from "@/domain/services/CustomerService.ts";
 
 const bookRepository = new InMemoryBookRepository();
 const bookService = new BookService(bookRepository);
+
+const customerRepository = new InMemoryCustomerRepository();
+const customerService = new CustomerService(customerRepository);
 
 const server = Bun.serve({
   port: 3000,
@@ -84,13 +90,40 @@ const server = Bun.serve({
       POST: async (req) => {
         const body = (await req.json()) as CreateCustomerRequest;
 
-        const res: CreateCustomerResponse = {};
+        const result = customerService.createCustomer(body);
+
+        if (!result.ok) {
+          return Response.json(
+            { message: result.error.message },
+            { status: 400 },
+          );
+        }
+
+        const { id: customer_id, name, email } = result.value;
+
+        const res: CreateCustomerResponse = {
+          customer_id,
+          name,
+          email,
+        };
         return Response.json(res);
       },
     },
     "/api/customers/:customer_id": {
       GET: async (req) => {
-        const res: GetCustomerDetailsResponse = {};
+        const customer = customerRepository.findById(req.params.customer_id);
+
+        if (!customer) {
+          return Response.json({ message: "Not Found" }, { status: 404 });
+        }
+
+        const { id: customer_id, name, email } = customer;
+
+        const res: GetCustomerDetailsResponse = {
+          customer_id,
+          name,
+          email,
+        };
         return Response.json(res);
       },
     },
