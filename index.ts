@@ -2,23 +2,25 @@ import type {
   CreateBookRequest,
   CreateBookResponse,
   GetBookDetailsResponse,
-} from "./src/dtos/BookDTOs.ts";
+} from "@/dtos/BookDTOs.ts";
 import type {
   CreateCustomerRequest,
   CreateCustomerResponse,
   GetCustomerDetailsResponse,
-} from "./src/dtos/CustomerDTOs.ts";
+} from "@/dtos/CustomerDTOs.ts";
 import type {
   CreateCheckoutRequest,
   CreateCheckoutResponse,
   CreateReturnRequest,
   CreateReturnResponse,
   GetCustomerCheckedOutBooks,
-} from "./src/dtos/CheckoutDTOs.ts";
+} from "@/dtos/CheckoutDTOs.ts";
 
-import { BookService } from "./src/domain/services/BookService.ts";
+import { BookService } from "@/domain/services/BookService.ts";
+import { InMemoryBookRepository } from "@/data/in_memory/InMemoryBookRepository.ts";
 
-const bookService = new BookService();
+const bookRepository = new InMemoryBookRepository();
+const bookService = new BookService(bookRepository);
 
 const server = Bun.serve({
   port: 3000,
@@ -46,12 +48,33 @@ const server = Bun.serve({
           available_copies: copies,
         };
 
-        return Response.json(res);
+        return Response.json(res, { status: 201 });
       },
     },
     "/api/books/:isbn": {
       GET: async (req) => {
-        const res: GetBookDetailsResponse = {};
+        const book = bookService.getBookWithAvailableCopies(req.params.isbn);
+
+        if (!book) {
+          return Response.json({ message: "Not Found" }, { status: 404 });
+        }
+
+        const {
+          isbn,
+          author,
+          copies,
+          title,
+          availableCopies: available_copies,
+        } = book;
+
+        const res: GetBookDetailsResponse = {
+          isbn,
+          title,
+          author,
+          available_copies,
+          copies,
+        };
+
         return Response.json(res);
       },
     },
