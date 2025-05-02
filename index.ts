@@ -183,7 +183,6 @@ const server = Bun.serve({
         const body = (await req.json()) as CreateCheckoutRequest;
 
         const customer = customerRepository.findById(body?.customer_id || "");
-        console.log(customer);
         if (!customer) {
           return Response.json(
             { message: "Customer Not Found" },
@@ -252,12 +251,12 @@ const server = Bun.serve({
           return Response.json({ message: "Book Not Found" }, { status: 404 });
         }
 
-        const returnedCheckout = checkoutService.returnBook(customer, book)[0];
+        const result = checkoutService.returnBook(customer, book);
 
-        if (!returnedCheckout) {
+        if (!result.ok) {
           return Response.json(
-            { message: "Checkout Not Found" },
-            { status: 404 },
+            { message: result.error.message },
+            { status: 400 },
           );
         }
 
@@ -265,9 +264,9 @@ const server = Bun.serve({
           message: "Book returned successfully",
           isbn: book.isbn,
           customer_id: customer.id,
-          return_date: toDisplayDate(returnedCheckout!.returnDate!)!,
+          return_date: toDisplayDate(result.value.returnDate!)!,
         };
-        return Response.json(res, { status: 201 });
+        return Response.json(res, { status: 200 });
       },
     },
 
