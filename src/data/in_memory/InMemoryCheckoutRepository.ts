@@ -4,31 +4,59 @@ import type { Checkout } from "@/domain/models/Checkout";
 import type { Customer } from "@/domain/models/Customer";
 
 export class InMemoryCheckoutRepository implements CheckoutRepository {
-  insert(checkout: Checkout): Checkout {
-    throw new Error("Method not implemented.");
+  private monotonicCheckoutId: number = 1;
+  private checkoutMap: Record<string, Checkout> = {};
+
+  insert(checkout: Omit<Checkout, "id">): Checkout {
+    const checkoutCopy = {
+      id: this.nextId(),
+      ...checkout,
+    };
+
+    this.checkoutMap[checkoutCopy.id] = checkoutCopy;
+
+    return checkoutCopy;
   }
 
-  return(checkout: Checkout, returnDate: Date): Checkout {
-    throw new Error("Method not implemented.");
+  update(checkout: Checkout): Checkout {
+    const checkoutCopy = { ...checkout };
+
+    this.checkoutMap[checkoutCopy.id] = checkoutCopy;
+
+    return checkoutCopy;
   }
 
   findById(id: Checkout["id"]): Checkout | undefined {
-    throw new Error("Method not implemented.");
+    return this.checkoutMap[id];
   }
 
   findByCustomer(customer: Customer): Checkout[] {
-    throw new Error("Method not implemented.");
+    return this.all().filter((co) => co.customerId === customer.id);
   }
 
   findByBook(book: Book): Checkout[] {
-    throw new Error("Method not implemented.");
+    return this.all().filter((co) => co.isbn === book.isbn);
   }
 
-  findCheckoutByBookAndCustomer(customer: Customer, book: Book): Checkout[] {
-    throw new Error("Method not implemented.");
+  findByBookAndCustomer(customer: Customer, book: Book): Checkout[] {
+    return this.all().filter(
+      (co) => co.isbn === book.isbn && co.customerId === customer.id,
+    );
   }
 
   reset(): void {
-    throw new Error("Method not implemented.");
+    this.monotonicCheckoutId = 0;
+    this.checkoutMap = {};
+  }
+
+  private all(): Checkout[] {
+    return Object.values(this.checkoutMap);
+  }
+
+  private nextId() {
+    const key = this.monotonicCheckoutId.toString().padStart(7, "0");
+    this.monotonicCheckoutId += 1;
+
+    return `CK${key}`;
   }
 }
