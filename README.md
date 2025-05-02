@@ -1,3 +1,70 @@
+# John Panos' Unwrap.ai Take Home Challenge
+
+I've heard a lot of good things about Bun and Zod, but I've never had a chance to use it at work as I mainly work on Ruby on Rails projects.
+
+Because of this, I chose to implement this challenge using those technologies to try them out. The end result is an application written in TypeScript using Bun as an [HTTP Server](https://bun.sh/docs/api/http) and [Zod for validations](https://zod.dev/).
+
+I've also included a [Nix flake](https://nixos.wiki/wiki/flakes) to simplify dev environment setup.
+
+## Setup
+
+To run this project you will need Bun and Python installed. We support two methods for setting up your environment, using the Nix package manager, or installing the dependencies manually.
+
+## Setting up the Environment - Nix (Linux/macOS/nixOS)
+
+Install the Nix package manager using the instructions [here](https://nixos.org/download/).
+
+Now that you have nix installed, make sure you are in the project folder and run:
+
+```bash
+nix develop
+```
+
+You should have Bun and Python installed and activated in your shell now. You may now move on to the "Project Setup" section.
+
+## Setting up the Environment - Standalone (Linux/macOS)
+
+### Install Python
+
+Follow the existing instructions [here](#installing-python).
+
+### Install Bun
+
+Follow the instructions [here](https://bun.sh/docs/installation).
+
+## Project Setup
+
+Once you've installed Bun and Python, you now need to install the project's dependencies.
+
+To create a virtual-environment for the project and install the required Python dependencies:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+To install the Bun dependencies:
+```bash
+bun install
+```
+
+## Running the server
+
+Now that all our dependencies are installed, you should be able to run the server by running `bun run start`!
+
+## Running the tests
+
+You may also run the application's unit test suite by running:
+```bash
+bun test
+```
+
+You may also run the provided API test suite by running:
+```bash
+python test_library_api.py
+```
+
+# Below is the original README:
 # Unwrap.ai - Take Home Challenge
 
 ## Overview
