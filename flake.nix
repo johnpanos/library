@@ -17,7 +17,7 @@
               zsh
               bun
               nodejs
-              python310
+              python312
             ];
           };
         }
