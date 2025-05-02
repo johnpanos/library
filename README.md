@@ -1,67 +1,92 @@
 # John Panos' Unwrap.ai Take Home Challenge
 
-I've heard a lot of good things about Bun and Zod, but I've never had a chance to use it at work as I mainly work on Ruby on Rails projects.
+## Project Overview
 
-Because of this, I chose to implement this challenge using those technologies to try them out. The end result is an application written in TypeScript using Bun as an [HTTP Server](https://bun.sh/docs/api/http) and [Zod for validations](https://zod.dev/).
+This project is a TypeScript application built with:
+- [Bun](https://bun.sh/docs/api/http) as the HTTP server
+- [Zod](https://zod.dev/) for data validation
+- A [Nix flake](https://nixos.wiki/wiki/flakes) for a simple and reproducable development environment setup
 
-I've also included a [Nix flake](https://nixos.wiki/wiki/flakes) to simplify dev environment setup.
+I chose this tech stack because I wanted a chance to play with Bun and Zod in practice. I work with Ruby on Rails everyday, so this was a nice change of pace.
 
-## Setup
+This project implements a library management API using a layered architecture of repositories, services, and models.
 
-To run this project you will need Bun and Python installed. We support two methods for setting up your environment, using the Nix package manager, or installing the dependencies manually.
+## Prerequisites
 
-## Setting up the Environment - Nix (Linux/macOS/nixOS)
+- Bun (JavaScript runtime and package manager)
+- Python (for running test scripts)
 
-Install the Nix package manager using the instructions [here](https://nixos.org/download/).
+## Environment Setup Options
 
-Now that you have nix installed, make sure you are in the project folder and run:
+### Option 1: Using Nix (Recommended for Linux/macOS/nixOS)
 
-```bash
-nix develop
-```
+1. Install the [Nix package manager](https://nixos.org/download/)
+2. Navigate to the project directory and run:
+   ```bash
+   nix develop
+   ```
+3. This will automatically configure your shell with Bun and Python
 
-You should have Bun and Python installed and activated in your shell now. You may now move on to the "Project Setup" section.
+### Option 2: Manual Installation
 
-## Setting up the Environment - Standalone (Linux/macOS)
+#### Installing Python
+Install Python following your operating system's recommended method or download from the [official site](https://www.python.org/downloads/).
 
-### Install Python
-
-Follow the existing instructions [here](#installing-python).
-
-### Install Bun
-
-Follow the instructions [here](https://bun.sh/docs/installation).
+#### Installing Bun
+Follow the [official Bun installation guide](https://bun.sh/docs/installation).
 
 ## Project Setup
 
-Once you've installed Bun and Python, you now need to install the project's dependencies.
+After installing the prerequisites:
 
-To create a virtual-environment for the project and install the required Python dependencies:
+1. **Set up Python environment:**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate # On Windows, use: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+2. **Install Bun dependencies:**
+   ```bash
+   bun install
+   ```
+
+## Running the Application
+
+Start the server:
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+bun run start
 ```
 
-To install the Bun dependencies:
-```bash
-bun install
-```
+The API will be available at http://localhost:3000
 
-## Running the server
+## Testing
 
-Now that all our dependencies are installed, you should be able to run the server by running `bun run start`!
-
-## Running the tests
-
-You may also run the application's unit test suite by running:
+### Running TypeScript Tests
 ```bash
 bun test
 ```
 
-You may also run the provided API test suite by running:
+### Running API Tests
 ```bash
 python test_library_api.py
+```
+
+## Project Structure
+
+```
+.
+├── index.ts                 # Application entry point
+├── src/
+│   ├── data/                # Data access layer
+│   │   ├── *Repository.ts   # Repository interfaces
+│   │   └── in_memory/       # In-memory implementations
+│   ├── domain/              # Business logic
+│   │   ├── models/          # Domain entities
+│   │   └── services/        # Business services
+│   ├── dtos/                # Data transfer objects
+│   └── types.ts             # Type definitions
+└── tests/                   # Test suites
 ```
 
 # Below is the original README:
