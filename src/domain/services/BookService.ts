@@ -71,7 +71,6 @@ export class BookService {
       .findByBook(book)
       .filter((co) => !co.returnDate).length;
 
-    // TODO: Actually calculate available copies
     return { ...book, availableCopies: book.copies - checkedOutCount };
   }
 }
