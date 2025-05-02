@@ -31,4 +31,4 @@ export type GetCustomerCheckedOutBooks = {
   author: string;
   checkout_date: string;
   due_date: string;
-};
+}[];
